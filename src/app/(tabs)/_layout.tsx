@@ -3,10 +3,13 @@ import { Platform, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { useAppTheme } from "@/theme/context"
 import { useQuoteStore } from "@/store/quoteStore"
+import { translate } from "@/i18n/translate"
+import { useTranslation } from "react-i18next"
 
 export default function TabsLayout() {
   const { theme } = useAppTheme()
   const favoritesCount = useQuoteStore((s) => s.favorites.length)
+  useTranslation()
 
   return (
     <Tabs
@@ -43,7 +46,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="quotes"
         options={{
-          title: "Quotes",
+          title: translate("tabs:quotes"),
+          tabBarLabel: translate("tabs:quotes"),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "book" : "book-outline"}
@@ -56,7 +60,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="favorites"
         options={{
-          title: "Favorites",
+          title: translate("tabs:favorites"),
+          tabBarLabel: translate("tabs:favorites"),
           tabBarBadge: favoritesCount ? (favoritesCount > 99 ? "99+" : favoritesCount) : undefined,
           tabBarBadgeStyle: {
             backgroundColor: theme.colors.tint,
@@ -74,7 +79,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: translate("tabs:settings"),
+          tabBarLabel: translate("tabs:settings"),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "settings" : "settings-outline"}

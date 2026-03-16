@@ -4,6 +4,8 @@ import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 import "intl-pluralrules"
 
+import { loadString } from "@/utils/storage"
+
 // if English isn't your default language, move Translations to the appropriate language file.
 import ar from "./ar"
 import en, { Translations } from "./en"
@@ -19,6 +21,7 @@ const systemLocales = Localization.getLocales()
 
 const resources = { ar, en, ko, es, fr, ja, hi }
 const supportedTags = Object.keys(resources)
+const savedTag = loadString("ignite.languageTag")
 
 // Checks to see if the device locale matches any of the supported locales
 // Device locale may be more specific and still match (e.g., en-US matches en)
@@ -32,11 +35,13 @@ const pickSupportedLocale: () => Localization.Locale | undefined = () => {
 }
 
 const locale = pickSupportedLocale()
+const initialLanguageTag =
+  savedTag && systemTagMatchesSupportedTags(savedTag) ? savedTag : locale?.languageTag ?? fallbackLocale
 
 export let isRTL = false
 
 // Need to set RTL ASAP to ensure the app is rendered correctly. Waiting for i18n to init is too late.
-if (locale?.languageTag && locale?.textDirection === "rtl") {
+if (initialLanguageTag.startsWith("ar")) {
   I18nManager.allowRTL(true)
   isRTL = true
 } else {
@@ -48,7 +53,7 @@ export const initI18n = async () => {
 
   await i18n.init({
     resources,
-    lng: locale?.languageTag ?? fallbackLocale,
+    lng: initialLanguageTag,
     fallbackLng: fallbackLocale,
     interpolation: {
       escapeValue: false,

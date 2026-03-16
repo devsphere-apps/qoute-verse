@@ -6,7 +6,6 @@ import { useQuoteStore } from "@/store/quoteStore"
 import { QuoteCard } from "@/components/QuoteCard"
 import { useAppTheme } from "@/theme/context"
 import { $styles } from "@/theme/styles"
-import { spacing } from "@/theme/spacing"
 
 export default function QuoteScreen() {
   const { quotes, loading, error, fetchQuotes } = useQuoteStore()
@@ -19,9 +18,7 @@ export default function QuoteScreen() {
   return (
     <Screen preset="fixed" safeAreaEdges={["top"]} useGradient contentContainerStyle={$styles.flex1}>
       <Col padding="m" flex={1} gap="m">
-        <Text variant="heading" color="text">
-          Daily Quotes
-        </Text>
+        <Text variant="heading" color="text" tx="quoteScreen:title" />
         {!!error && <Text color="error">{error}</Text>}
         <FlatList
           data={quotes}
@@ -42,11 +39,11 @@ export default function QuoteScreen() {
             loading ? (
               <Col padding="l" alignItems="center" gap="m">
                 <ActivityIndicator size="large" color={theme.colors.tint} />
-                <Text color="textDim" text="Loading quotes..." />
+                <Text color="textDim" tx="quoteScreen:loading" />
               </Col>
             ) : (
               <Col padding="l" alignItems="center" gap="m">
-                <Text color="textDim" text="No quotes yet. Pull to refresh or tap New Quotes." />
+                <Text color="textDim" tx="quoteScreen:empty" />
               </Col>
             )
           }
@@ -56,7 +53,7 @@ export default function QuoteScreen() {
           onPress={() => fetchQuotes()}
           disabled={loading}
           preset="filled"
-          style={{ backgroundColor: theme.colors.tint, borderColor: theme.colors.tint, borderRadius:spacing.m }}
+          style={{ backgroundColor: theme.colors.tint, borderColor: theme.colors.tint }}
           textStyle={{ color: "#FFFFFF" }}
         />
       </Col>

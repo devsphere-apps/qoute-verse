@@ -16,9 +16,7 @@ export default function FavoritesScreen() {
   return (
     <Screen preset="fixed" safeAreaEdges={["top"]} useGradient contentContainerStyle={$styles.flex1}>
       <Col padding="m" flex={1} gap="m">
-        <Text variant="heading" color="text">
-          Favorite Quotes
-        </Text>
+        <Text variant="heading" color="text" tx="favoritesScreen:title" />
         <FlatList
           data={favorites}
           renderItem={({ item }) => <QuoteCard quote={item} />}
@@ -32,14 +30,14 @@ export default function FavoritesScreen() {
               <Text
                 variant="subheading"
                 color="text"
-                text="No favorites yet"
+                tx="favoritesScreen:emptyTitle"
                 style={{ textAlign: "center" }}
               />
               <Text
                 variant="body"
                 color="textDim"
                 style={themed($emptyText)}
-                text="Tap the heart on a quote to save it here."
+                tx="favoritesScreen:emptySubtitle"
               />
             </Col>
           }

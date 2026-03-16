@@ -5,10 +5,37 @@ const en = {
     back: "Back",
   },
   quoteScreen: {
+    title: "Daily Quotes",
     newQuotes: "New Quotes",
+    loading: "Loading quotes...",
+    empty: "No quotes yet. Pull to refresh or tap New Quotes.",
   },
   favoritesScreen: {
+    title: "Favorite Quotes",
     remove: "Remove",
+    emptyTitle: "No favorites yet",
+    emptySubtitle: "Tap the heart on a quote to save it here.",
+  },
+  tabs: {
+    quotes: "Quotes",
+    favorites: "Favorites",
+    settings: "Settings",
+  },
+  settingsScreen: {
+    title: "Settings",
+    subtitle: "Customize your app experience",
+    appearance: "Appearance",
+    theme: "Theme",
+    language: "Language",
+    notifications: "Notifications",
+    pushNotifications: "Push Notifications",
+    pushNotificationsSubtitle: "Receive notifications about updates",
+    about: "About",
+    version: "Version",
+    versionSubtitle: "App version information",
+    themeModeLight: "Light",
+    themeModeDark: "Dark",
+    themeSystem: "System ({{mode}})",
   },
   welcomeScreen: {
     postscript:

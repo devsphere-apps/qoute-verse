@@ -2,6 +2,8 @@ import { useState } from "react"
 import { Ionicons } from "@expo/vector-icons"
 import { TouchableOpacity } from "react-native"
 import { useMMKVString } from "react-native-mmkv"
+import i18n from "i18next"
+import { useTranslation } from "react-i18next"
 import { Screen, Text, Box, Col, Stack, Surface, Row, Switch } from "@/components"
 import { useAppTheme } from "@/theme/context"
 import { useColorScheme } from "react-native"
@@ -12,41 +14,47 @@ export default function SettingsScreen() {
   const systemColorScheme = useColorScheme()
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [themeScheme] = useMMKVString("ignite.themeScheme", storage)
+  const [languageTag, setLanguageTag] = useMMKVString("ignite.languageTag", storage)
+  const { t } = useTranslation()
 
   const getThemeLabel = () => {
-    if (themeContext === "dark") return "Dark"
-    if (themeContext === "light") return "Light"
-    return `System (${systemColorScheme === "dark" ? "Dark" : "Light"})`
+    const mode = systemColorScheme === "dark" ? t("settingsScreen:themeModeDark") : t("settingsScreen:themeModeLight")
+    if (themeContext === "dark") return t("settingsScreen:themeModeDark")
+    if (themeContext === "light") return t("settingsScreen:themeModeLight")
+    return t("settingsScreen:themeSystem", { mode })
   }
+
+  const currentLanguage = languageTag || i18n.language || "en"
+  const languages = [
+    { tag: "en", label: "EN" },
+    { tag: "ar", label: "AR" },
+    { tag: "es", label: "ES" },
+    { tag: "fr", label: "FR" },
+    { tag: "hi", label: "HI" },
+    { tag: "ja", label: "JA" },
+    { tag: "ko", label: "KO" },
+  ]
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top"]} useGradient>
       <Col padding="m" gap="l">
         {/* HEADER */}
         <Box marginBottom="s">
-          <Text variant="heading" color="text">
-            Settings
-          </Text>
+          <Text variant="heading" color="text" tx="settingsScreen:title" />
         </Box>
-        <Text variant="body" color="textDim">
-          Customize your app experience
-        </Text>
+        <Text variant="body" color="textDim" tx="settingsScreen:subtitle" />
 
         {/* APPEARANCE SECTION */}
         <Stack spacing="m">
           <Box marginTop="m">
-            <Text variant="subheading" color="text">
-              Appearance
-            </Text>
+            <Text variant="subheading" color="text" tx="settingsScreen:appearance" />
           </Box>
 
           <Surface padding="m">
             <Stack spacing="m">
               <Row justifyContent="space-between" alignItems="center">
                 <Col flex={1}>
-                  <Text variant="body" color="text">
-                    Theme
-                  </Text>
+                  <Text variant="body" color="text" tx="settingsScreen:theme" />
                   <Text variant="caption" color="textDim">
                     {getThemeLabel()}
                   </Text>
@@ -104,25 +112,60 @@ export default function SettingsScreen() {
               </Row>
             </Stack>
           </Surface>
+
+          <Surface padding="m">
+            <Stack spacing="m">
+              <Row justifyContent="space-between" alignItems="center">
+                <Col flex={1}>
+                  <Text variant="body" color="text" tx="settingsScreen:language" />
+                  <Text variant="caption" color="textDim">
+                    {currentLanguage}
+                  </Text>
+                </Col>
+                <Row gap="s" flexWrap="wrap" justifyContent="flex-end">
+                  {languages.map((lang) => {
+                    const selected = currentLanguage.startsWith(lang.tag)
+                    return (
+                      <TouchableOpacity
+                        key={lang.tag}
+                        onPress={async () => {
+                          setLanguageTag(lang.tag)
+                          await i18n.changeLanguage(lang.tag)
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Box
+                          paddingHorizontal="s"
+                          paddingVertical="xs"
+                          backgroundColor={selected ? "tint" : "background"}
+                          borderRadius="s"
+                        >
+                          <Text
+                            variant="caption"
+                            color={selected ? "background" : "text"}
+                            text={lang.label}
+                          />
+                        </Box>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </Row>
+              </Row>
+            </Stack>
+          </Surface>
         </Stack>
 
         {/* NOTIFICATIONS SECTION */}
         <Stack spacing="m">
           <Box marginTop="m">
-            <Text variant="subheading" color="text">
-              Notifications
-            </Text>
+            <Text variant="subheading" color="text" tx="settingsScreen:notifications" />
           </Box>
 
           <Surface padding="m">
             <Row justifyContent="space-between" alignItems="center">
               <Col flex={1}>
-                <Text variant="body" color="text">
-                  Push Notifications
-                </Text>
-                <Text variant="caption" color="textDim">
-                  Receive notifications about updates
-                </Text>
+                <Text variant="body" color="text" tx="settingsScreen:pushNotifications" />
+                <Text variant="caption" color="textDim" tx="settingsScreen:pushNotificationsSubtitle" />
               </Col>
               <Switch value={notificationsEnabled} onValueChange={setNotificationsEnabled} />
             </Row>
@@ -132,41 +175,19 @@ export default function SettingsScreen() {
         {/* ABOUT SECTION */}
         <Stack spacing="m">
           <Box marginTop="m">
-            <Text variant="subheading" color="text">
-              About
-            </Text>
+            <Text variant="subheading" color="text" tx="settingsScreen:about" />
           </Box>
 
           <Surface padding="m">
             <Stack spacing="m">
               <Row justifyContent="space-between" alignItems="center">
                 <Col flex={1}>
-                  <Text variant="body" color="text">
-                    Version
-                  </Text>
-                  <Text variant="caption" color="textDim">
-                    App version information
-                  </Text>
+                  <Text variant="body" color="text" tx="settingsScreen:version" />
+                  <Text variant="caption" color="textDim" tx="settingsScreen:versionSubtitle" />
                 </Col>
                 <Text variant="body" color="textDim">
                   1.0.0
                 </Text>
-              </Row>
-            </Stack>
-          </Surface>
-
-          <Surface padding="m">
-            <Stack spacing="m">
-              <Row justifyContent="space-between" alignItems="center">
-                <Col flex={1}>
-                  <Text variant="body" color="text">
-                    Pattern Playground
-                  </Text>
-                  <Text variant="caption" color="textDim">
-                    Layout system demonstration
-                  </Text>
-                </Col>
-                <Ionicons name="chevron-forward" size={20} color={theme.colors.textDim} />
               </Row>
             </Stack>
           </Surface>
@@ -178,4 +199,3 @@ export default function SettingsScreen() {
     </Screen>
   )
 }
-

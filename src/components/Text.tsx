@@ -8,9 +8,9 @@ import {
   useWindowDimensions,
 } from "react-native"
 import { TOptions } from "i18next"
+import { useTranslation } from "react-i18next"
 
 import { isRTL, TxKeyPath } from "@/i18n"
-import { translate } from "@/i18n/translate"
 import { useAppTheme } from "@/theme/context"
 import type { Theme } from "@/theme/types"
 import { typography } from "@/theme/typography"
@@ -92,6 +92,7 @@ export interface TextProps extends RNTextProps {
  */
 export const Text = forwardRef(function Text(props: TextProps, ref: ForwardedRef<RNText>) {
   const { theme } = useAppTheme()
+  const { t, i18n } = useTranslation()
   const { width } = useWindowDimensions()
   const {
     variant,
@@ -137,7 +138,7 @@ export const Text = forwardRef(function Text(props: TextProps, ref: ForwardedRef
     return value as T
   }
 
-  const i18nText = tx && translate(tx, txOptions)
+  const i18nText = tx ? (i18n.isInitialized ? t(tx as string, txOptions) : (tx as string)) : undefined
   const content = i18nText || text || children
 
   // Resolve variant (prefer variant over preset)
