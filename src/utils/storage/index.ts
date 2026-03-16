@@ -80,3 +80,4 @@ export function clear(): void {
     storage.clearAll()
   } catch {}
 }
+

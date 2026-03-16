@@ -37,13 +37,14 @@ export default function TabsLayout() {
         tabBarShowLabel: true,
       }}
     >
+
       <Tabs.Screen
-        name="index"
+        name="quotes"
         options={{
-          title: "Home",
+          title: "Quotes",
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? "home" : "home-outline"}
+              name={focused ? "book" : "book-outline"}
               size={size}
               color={color}
             />
@@ -51,12 +52,12 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="full"
+        name="favorites"
         options={{
-          title: "Full Demo",
+          title: "Favorites",
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
-              name={focused ? "grid" : "grid-outline"}
+              name={focused ? "heart" : "heart-outline"}
               size={size}
               color={color}
             />

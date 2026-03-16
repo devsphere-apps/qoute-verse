@@ -16,5 +16,6 @@ export { Card } from "./Card"
 export { EmptyState } from "./EmptyState"
 export { Header, type HeaderProps } from "./Header"
 export { ListItem, type ListItemProps } from "./ListItem"
+export { Icon, PressableIcon } from "./Icon"
 export { Switch, type SwitchToggleProps } from "./Toggle/Switch"
 

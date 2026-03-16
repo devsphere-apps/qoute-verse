@@ -61,6 +61,10 @@ interface BaseScreenProps {
    * Pass any additional props directly to the KeyboardAvoidingView component.
    */
   KeyboardAvoidingViewProps?: KeyboardAvoidingViewProps
+  /**
+   * Whether to use a gradient background.
+   */
+  useGradient?: boolean
 }
 
 interface FixedScreenProps extends BaseScreenProps {
@@ -168,18 +172,31 @@ function useAutoPreset(props: AutoScreenProps): {
   }
 }
 
+import { LinearGradient } from "expo-linear-gradient"
+
 /**
  * @param {ScreenProps} props - The props for the `ScreenWithoutScrolling` component.
  * @returns {JSX.Element} - The rendered `ScreenWithoutScrolling` component.
  */
 function ScreenWithoutScrolling(props: ScreenProps) {
-  const { style, contentContainerStyle, children, preset } = props
+  const { style, contentContainerStyle, children, preset, useGradient } = props
+  const { theme } = useAppTheme()
+
+  const Wrapper = (useGradient ? LinearGradient : View) as any
+  const wrapperProps = useGradient
+    ? {
+        colors: [theme.colors.palette.neutral100, theme.colors.palette.neutral300],
+        start: { x: 0, y: 0 },
+        end: { x: 1, y: 1 },
+      }
+    : {}
+
   return (
-    <View style={[$outerStyle, style]}>
+    <Wrapper style={[$outerStyle, style]} {...wrapperProps}>
       <View style={[$innerStyle, preset === "fixed" && $justifyFlexEnd, contentContainerStyle]}>
         {children}
       </View>
-    </View>
+    </Wrapper>
   )
 }
 
@@ -195,8 +212,10 @@ function ScreenWithScrolling(props: ScreenProps) {
     contentContainerStyle,
     ScrollViewProps,
     style,
+    useGradient,
   } = props as ScrollScreenProps
 
+  const { theme } = useAppTheme()
   const ref = useRef<ScrollView>(null)
 
   const { scrollEnabled, onContentSizeChange, onLayout } = useAutoPreset(props as AutoScreenProps)
@@ -205,28 +224,39 @@ function ScreenWithScrolling(props: ScreenProps) {
   // More info at: https://reactnavigation.org/docs/use-scroll-to-top/
   useScrollToTop(ref)
 
+  const Wrapper = (useGradient ? LinearGradient : View) as any
+  const wrapperProps = useGradient
+    ? {
+        colors: [theme.colors.palette.neutral100, theme.colors.palette.neutral300],
+        start: { x: 0, y: 0 },
+        end: { x: 1, y: 1 },
+      }
+    : {}
+
   return (
-    <KeyboardAwareScrollView
-      bottomOffset={keyboardBottomOffset}
-      {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
-      {...ScrollViewProps}
-      onLayout={(e) => {
-        onLayout(e)
-        ScrollViewProps?.onLayout?.(e)
-      }}
-      onContentSizeChange={(w: number, h: number) => {
-        onContentSizeChange(w, h)
-        ScrollViewProps?.onContentSizeChange?.(w, h)
-      }}
-      style={[$outerStyle, ScrollViewProps?.style, style]}
-      contentContainerStyle={[
-        $innerStyle,
-        ScrollViewProps?.contentContainerStyle,
-        contentContainerStyle,
-      ]}
-    >
-      {children}
-    </KeyboardAwareScrollView>
+    <Wrapper style={[$outerStyle, style]} {...wrapperProps}>
+      <KeyboardAwareScrollView
+        bottomOffset={keyboardBottomOffset}
+        {...{ keyboardShouldPersistTaps, scrollEnabled, ref }}
+        {...ScrollViewProps}
+        onLayout={(e) => {
+          onLayout(e)
+          ScrollViewProps?.onLayout?.(e)
+        }}
+        onContentSizeChange={(w: number, h: number) => {
+          onContentSizeChange(w, h)
+          ScrollViewProps?.onContentSizeChange?.(w, h)
+        }}
+        style={[$outerStyle, ScrollViewProps?.style]}
+        contentContainerStyle={[
+          $innerStyle,
+          ScrollViewProps?.contentContainerStyle,
+          contentContainerStyle,
+        ]}
+      >
+        {children}
+      </KeyboardAwareScrollView>
+    </Wrapper>
   )
 }
 

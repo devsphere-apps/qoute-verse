@@ -48,3 +48,9 @@ export interface ApiConfig {
    */
   timeout: number
 }
+
+export interface Quote {
+  quote: string;
+  author: string;
+  category: string;
+}

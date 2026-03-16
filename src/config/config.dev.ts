@@ -6,5 +6,6 @@
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
 export default {
-  API_URL: "https://api.rss2json.com/v1/",
+  API_URL: "https://api.api-ninjas.com/v1/",
+  API_KEY: "YOUR_API_KEY_HERE",
 }

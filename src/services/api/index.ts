@@ -37,6 +37,7 @@ export class Api {
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
+        "X-Api-Key": Config.API_KEY,
       },
     })
   }
@@ -44,3 +45,5 @@ export class Api {
 
 // Singleton instance of the API for convenience
 export const api = new Api()
+
+export * from "./quoteApi" // export all functions from quoteApi.ts
