@@ -2,9 +2,11 @@ import { Tabs } from "expo-router"
 import { Platform, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { useAppTheme } from "@/theme/context"
+import { useQuoteStore } from "@/store/quoteStore"
 
 export default function TabsLayout() {
   const { theme } = useAppTheme()
+  const favoritesCount = useQuoteStore((s) => s.favorites.length)
 
   return (
     <Tabs
@@ -55,6 +57,11 @@ export default function TabsLayout() {
         name="favorites"
         options={{
           title: "Favorites",
+          tabBarBadge: favoritesCount ? (favoritesCount > 99 ? "99+" : favoritesCount) : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: theme.colors.tint,
+            color: "#FFFFFF",
+          },
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? "heart" : "heart-outline"}
@@ -80,4 +87,3 @@ export default function TabsLayout() {
     </Tabs>
   )
 }
-
