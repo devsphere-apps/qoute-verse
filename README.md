@@ -57,12 +57,14 @@ src/
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Setup Instructions & CNG Workflow
+
+This project uses **Continuous Native Generation (CNG)**. Native directories (`ios/` and `android/`) are generated dynamically. Since we use native modules like **MMKV** and **Reanimated**, you must run the app using a **Development Client**.
 
 ### 1. Prerequisites
 - [Node.js](https://nodejs.org/) (v20+)
 - [Yarn](https://yarnpkg.com/) or NPM
-- [Expo Go](https://expo.dev/expo-go) or a Development Client
+- [CocoaPods](https://cocoapods.org/) (for iOS only)
 
 ### 2. Installation
 ```bash
@@ -72,18 +74,29 @@ yarn install
 ```
 
 ### 3. Environment Setup
-Create a `.env` file or update your config:
+Create a `.env` file:
 ```bash
 EXPO_PUBLIC_API_URL=https://api.api-ninjas.com/v1/
 EXPO_PUBLIC_API_KEY=your_api_key_from_api_ninjas
 ```
 
-### 4. Running the App
+### 4. Prebuild & Native Run (Required)
+To generate the native folders and run the app with native module support:
+
+#### Generate Native Directories
 ```bash
-npx expo start
+npx expo prebuild
 ```
-- Press **i** for iOS Simulator.
-- Press **a** for Android Emulator.
+
+#### Run on iOS
+```bash
+npx expo run:ios
+```
+
+#### Run on Android
+```bash
+npx expo run:android
+```
 
 ---
 
