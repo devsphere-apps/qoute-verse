@@ -1,5 +1,3 @@
-# QuoteVerse – Daily Quote App
-React Native Developer Assignment – Dev Innovations Labs
 
 QuoteVerse is a modern React Native application that provides daily motivational quotes. Built with a focus on clean UI, smooth performance, and robust architecture.
 
