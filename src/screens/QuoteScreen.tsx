@@ -1,15 +1,22 @@
 
 import React, { useEffect } from "react"
-import { FlatList, ActivityIndicator, RefreshControl } from "react-native"
+import { ActivityIndicator, RefreshControl, ViewToken } from "react-native"
 import { Screen, Text, Button, Col } from "@/components"
 import { useQuoteStore } from "@/store/quoteStore"
 import { QuoteCard } from "@/components/QuoteCard"
 import { useAppTheme } from "@/theme/context"
 import { $styles } from "@/theme/styles"
+import { spacing } from "@/theme/spacing"
+import Animated, { useSharedValue } from "react-native-reanimated"
 
 export default function QuoteScreen() {
   const { quotes, loading, error, fetchQuotes } = useQuoteStore()
   const { theme } = useAppTheme()
+  const viewableItems = useSharedValue<number[]>([])
+
+  const onViewableItemsChanged = ({ viewableItems: changedItems }: { viewableItems: ViewToken[] }) => {
+    viewableItems.value = changedItems.map((item) => item.index ?? 0)
+  }
 
   useEffect(() => {
     fetchQuotes()
@@ -20,11 +27,15 @@ export default function QuoteScreen() {
       <Col padding="m" flex={1} gap="m">
         <Text variant="heading" color="text" tx="quoteScreen:title" />
         {!!error && <Text color="error">{error}</Text>}
-        <FlatList
+        <Animated.FlatList
           data={quotes}
-          renderItem={({ item }) => <QuoteCard quote={item} />}
+          renderItem={({ item, index }) => (
+            <QuoteCard quote={item} index={index} viewableItems={viewableItems} />
+          )}
           keyExtractor={(item) => `${item.quote}-${item.author}`}
           showsVerticalScrollIndicator={false}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
           style={$styles.flex1}
           contentContainerStyle={{ paddingBottom: theme.spacing.l }}
           refreshControl={
@@ -53,7 +64,7 @@ export default function QuoteScreen() {
           onPress={() => fetchQuotes()}
           disabled={loading}
           preset="filled"
-          style={{ backgroundColor: theme.colors.tint, borderColor: theme.colors.tint }}
+          style={{ backgroundColor: theme.colors.tint, borderColor: theme.colors.tint,borderRadius:spacing.xl  }}
           textStyle={{ color: "#FFFFFF" }}
         />
       </Col>

@@ -14,6 +14,9 @@ import type { ThemedStyle, ThemedStyleArray } from "@/theme/types"
 
 import { Text, TextProps } from "./Text"
 
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated"
+
+
 type Presets = "default" | "filled" | "reversed"
 
 export interface ButtonAccessoryProps {
@@ -114,12 +117,30 @@ export function Button(props: ButtonProps) {
     LeftAccessory,
     disabled,
     disabledStyle: $disabledViewStyleOverride,
+    onPressIn,
+    onPressOut,
     ...rest
   } = props
 
   const { themed } = useAppTheme()
+  const scale = useSharedValue(1)
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }))
 
   const preset: Presets = props.preset ?? "default"
+
+  const handlePressIn = (event: any) => {
+    scale.value = withSpring(0.96)
+    onPressIn?.(event)
+  }
+
+  const handlePressOut = (event: any) => {
+    scale.value = withSpring(1)
+    onPressOut?.(event)
+  }
+
   /**
    * @param {PressableStateCallbackType} root0 - The root object containing the pressed state.
    * @param {boolean} root0.pressed - The pressed state.
@@ -148,39 +169,41 @@ export function Button(props: ButtonProps) {
   }
 
   return (
-    <Pressable
-      style={$viewStyle}
-      accessibilityRole="button"
-      accessibilityState={{ disabled: !!disabled }}
-      {...rest}
-      disabled={disabled}
-    >
-      {(state) => (
-        <>
-          {!!LeftAccessory && (
-            <LeftAccessory style={$leftAccessoryStyle} pressableState={state} disabled={disabled} />
-          )}
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        style={$viewStyle}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: !!disabled }}
+        {...rest}
+        disabled={disabled}
+      >
+        {(state) => (
+          <>
+            {!!LeftAccessory && (
+              <LeftAccessory
+                style={$leftAccessoryStyle}
+                pressableState={state}
+                disabled={disabled}
+              />
+            )}
 
-          <Text
-            tx={tx}
-            text={text}
-            txOptions={txOptions}
-            variant="body"
-            style={$textStyle(state)}
-          >
-            {children}
-          </Text>
+            <Text tx={tx} text={text} txOptions={txOptions} variant="body" style={$textStyle(state)}>
+              {children}
+            </Text>
 
-          {!!RightAccessory && (
-            <RightAccessory
-              style={$rightAccessoryStyle}
-              pressableState={state}
-              disabled={disabled}
-            />
-          )}
-        </>
-      )}
-    </Pressable>
+            {!!RightAccessory && (
+              <RightAccessory
+                style={$rightAccessoryStyle}
+                pressableState={state}
+                disabled={disabled}
+              />
+            )}
+          </>
+        )}
+      </Pressable>
+    </Animated.View>
   )
 }
 

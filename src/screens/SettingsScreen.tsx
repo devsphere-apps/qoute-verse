@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Ionicons } from "@expo/vector-icons"
-import { TouchableOpacity } from "react-native"
+import { I18nManager, TouchableOpacity } from "react-native"
 import { useMMKVString } from "react-native-mmkv"
 import i18n from "i18next"
 import { useTranslation } from "react-i18next"
@@ -8,6 +8,7 @@ import { Screen, Text, Box, Col, Stack, Surface, Row, Switch } from "@/component
 import { useAppTheme } from "@/theme/context"
 import { useColorScheme } from "react-native"
 import { storage } from "@/utils/storage"
+import { reloadApp } from "@/utils/reloadApp"
 
 export default function SettingsScreen() {
   const { theme, themeContext, setThemeContextOverride } = useAppTheme()
@@ -34,6 +35,20 @@ export default function SettingsScreen() {
     { tag: "ja", label: "JA" },
     { tag: "ko", label: "KO" },
   ]
+
+  const applyLanguage = async (tag: string) => {
+    const shouldBeRTL = tag.startsWith("ar")
+    const rtlChanged = I18nManager.isRTL !== shouldBeRTL
+
+    setLanguageTag(tag)
+    await i18n.changeLanguage(tag)
+
+    if (rtlChanged) {
+      I18nManager.allowRTL(shouldBeRTL)
+      I18nManager.forceRTL(shouldBeRTL)
+      reloadApp()
+    }
+  }
 
   return (
     <Screen preset="scroll" safeAreaEdges={["top"]} useGradient>
@@ -129,8 +144,7 @@ export default function SettingsScreen() {
                       <TouchableOpacity
                         key={lang.tag}
                         onPress={async () => {
-                          setLanguageTag(lang.tag)
-                          await i18n.changeLanguage(lang.tag)
+                          await applyLanguage(lang.tag)
                         }}
                         activeOpacity={0.7}
                       >

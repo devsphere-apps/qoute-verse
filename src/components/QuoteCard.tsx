@@ -8,10 +8,22 @@ import { useAppTheme } from "@/theme/context"
 import { Box, Row, Col, Surface } from "@/components"
 import { Text } from "@/components/Text"
 import type { Theme, ThemedStyle } from "@/theme/types"
-import Animated, { FadeInDown } from "react-native-reanimated"
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  LinearTransition,
+  useAnimatedStyle,
+  interpolate,
+  Extrapolation,
+  SharedValue,
+  withTiming,
+} from "react-native-reanimated"
 
 interface QuoteCardProps {
   quote: Quote
+  index: number
+  viewableItems: SharedValue<number[]>
 }
 
 type ColorKey = Exclude<keyof Theme["colors"], "palette">
@@ -43,11 +55,24 @@ function getCategoryPill(category: string, isDark: boolean): { bg: ColorKey; fg:
   }
 }
 
-export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
+export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, index, viewableItems }) => {
   const { addFavorite, removeFavorite, isFavorite } = useQuoteStore()
   const { themed, theme } = useAppTheme()
   const favorite = isFavorite(quote)
   const pill = quote.category ? getCategoryPill(quote.category, theme.isDark) : null
+
+  const animatedVisibilityStyle = useAnimatedStyle(() => {
+    const isVisible = viewableItems.value.includes(index)
+
+    return {
+      opacity: withTiming(isVisible ? 1 : 0),
+      transform: [
+        {
+          scale: withTiming(isVisible ? 1 : 0.6),
+        },
+      ],
+    }
+  }, [index])
 
   const onShare = async () => {
     try {
@@ -68,8 +93,13 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
   }
 
   return (
-    <Animated.View entering={FadeInDown.duration(180)}>
-      <Surface padding="m" marginVertical="s" backgroundColor="separator">
+    <Animated.View
+      entering={FadeInDown.duration(400).delay(index * 80).springify()}
+      exiting={FadeOut.duration(300)}
+      layout={LinearTransition.springify()}
+      style={animatedVisibilityStyle}
+    >
+      <Surface padding="m" marginVertical="s" backgroundColor="separator" position="relative">
         <Col gap="s">
           {!!quote.category && pill && (
             <Row justifyContent="space-between" alignItems="center">
@@ -91,11 +121,20 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
               hitSlop={12}
               style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
             >
-              <Ionicons
-                name={favorite ? "heart" : "heart-outline"}
-                size={24}
-                color={favorite ? theme.colors.error : theme.colors.textDim}
-              />
+              <Box width={24} height={24} alignItems="center" justifyContent="center">
+                <Animated.View
+                  key={favorite ? "fav" : "unfav"}
+                  entering={FadeIn.duration(150)}
+                  exiting={FadeOut.duration(150)}
+                  style={{ position: "absolute" }}
+                >
+                  <Ionicons
+                    name={favorite ? "heart" : "heart-outline"}
+                    size={24}
+                    color={favorite ? theme.colors.error : theme.colors.textDim}
+                  />
+                </Animated.View>
+              </Box>
             </Pressable>
             <Pressable onPress={onShare} hitSlop={12} style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}>
               <Ionicons name="share-outline" size={24} color={theme.colors.textDim} />
