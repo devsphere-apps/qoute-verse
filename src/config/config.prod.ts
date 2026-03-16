@@ -5,7 +5,11 @@
  *
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
+import Constants from "expo-constants"
+
+const extra = (Constants.expoConfig?.extra ?? {}) as Record<string, unknown>
+
 export default {
-  API_URL: "https://api.api-ninjas.com/v1/",
-  API_KEY: "YOUR_API_KEY_HERE",
+  API_URL: (extra.apiUrl as string | undefined) ?? "https://api.api-ninjas.com/v1/",
+  API_KEY: (extra.apiKey as string | undefined) ?? "",
 }

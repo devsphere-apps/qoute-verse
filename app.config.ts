@@ -19,6 +19,11 @@ module.exports = ({ config }: ConfigContext): Partial<ExpoConfig> => {
 
   return {
     ...config,
+    extra: {
+      ...config.extra,
+      apiUrl: process.env.EXPO_PUBLIC_API_URL ?? "https://api.api-ninjas.com/v1/",
+      apiKey: process.env.EXPO_PUBLIC_API_KEY ?? "",
+    },
     ios: {
       ...config.ios,
       // This privacyManifests is to get you started.

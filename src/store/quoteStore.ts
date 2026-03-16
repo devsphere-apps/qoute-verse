@@ -18,7 +18,7 @@ interface QuoteState {
   favorites: Quote[]
   loading: boolean
   error: string | null
-  fetchQuotes: (category: string) => Promise<void>
+  fetchQuotes: (category?: string) => Promise<void>
   addFavorite: (quote: Quote) => void
   removeFavorite: (quote: Quote) => void
   isFavorite: (quote: Quote) => boolean
@@ -35,9 +35,12 @@ export const useQuoteStore = create<QuoteState>()(
         set({ loading: true, error: null })
         try {
           const quotes = await getQuote(category)
-          set({ quotes, loading: false })
+          set({ quotes, loading: false, error: null })
         } catch (error) {
-          set({ error: "Failed to fetch quotes", loading: false })
+          set({
+            error: error instanceof Error ? error.message : "Failed to fetch quotes",
+            loading: false,
+          })
         }
       },
       addFavorite: (quote) =>

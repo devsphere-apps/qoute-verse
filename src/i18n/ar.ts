@@ -6,6 +6,12 @@ const ar: Translations = {
     cancel: "حذف",
     back: "خلف",
   },
+  quoteScreen: {
+    newQuotes: "New Quotes",
+  },
+  favoritesScreen: {
+    remove: "Remove",
+  },
   welcomeScreen: {
     postscript:
       "ربما لا يكون هذا هو الشكل الذي يبدو عليه تطبيقك مالم يمنحك المصمم هذه الشاشات وشحنها في هذه الحالة",

@@ -5,6 +5,11 @@ const { getDefaultConfig } = require("expo/metro-config")
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname)
 
+config.watcher = {
+  ...config.watcher,
+  useWatchman: false,
+}
+
 config.transformer.getTransformOptions = async () => ({
   transform: {
     // Inline requires are very useful for deferring loading of large dependencies/components.

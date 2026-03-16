@@ -20,7 +20,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <Screen preset="scroll" safeAreaEdges={["top", "bottom"]}>
+    <Screen preset="scroll" safeAreaEdges={["top"]} useGradient>
       <Col padding="m" gap="l">
         {/* HEADER */}
         <Box marginBottom="s">

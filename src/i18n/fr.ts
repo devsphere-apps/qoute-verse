@@ -6,6 +6,12 @@ const fr: Translations = {
     cancel: "Annuler",
     back: "Retour",
   },
+  quoteScreen: {
+    newQuotes: "New Quotes",
+  },
+  favoritesScreen: {
+    remove: "Remove",
+  },
   welcomeScreen: {
     postscript:
       "psst  — Ce n'est probablement pas à quoi ressemble votre application. (À moins que votre designer ne vous ait donné ces écrans, dans ce cas, mettez la en prod !)",

@@ -51,15 +51,15 @@ yarn install
 
 ### 4. API Configuration
 You'll need an API key from [API Ninjas](https://api-ninjas.com/api/quotes).
-- Open `src/config/config.dev.ts` (and `config.prod.ts`).
-- Replace `YOUR_API_KEY_HERE` with your actual API key.
 
-```typescript
-export default {
-  API_URL: "https://api.api-ninjas.com/v1/",
-  API_KEY: "your_actual_api_key_here",
-}
+Add your values to `.env`:
+
+```bash
+EXPO_PUBLIC_API_URL=https://api.api-ninjas.com/v1/
+EXPO_PUBLIC_API_KEY=your_actual_api_key_here
 ```
+
+These values are injected into the app config (`extra`) and read at runtime via `expo-constants`.
 
 ### 5. Running the App
 Since this project uses native modules like **MMKV**, it's recommended to run it via a development client or a prebuild.

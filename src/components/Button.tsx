@@ -236,8 +236,8 @@ const $viewPresets: Record<Presets, ThemedStyleArray<ViewStyle>> = {
 }
 
 const $textPresets: Record<Presets, ThemedStyleArray<TextStyle>> = {
-  default: [$baseTextStyle],
-  filled: [$baseTextStyle],
+  default: [$baseTextStyle, ({ colors }) => ({ color: colors.text })],
+  filled: [$baseTextStyle, ({ colors }) => ({ color: colors.text })],
   reversed: [$baseTextStyle, ({ colors }) => ({ color: colors.background })],
 }
 

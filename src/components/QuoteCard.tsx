@@ -1,20 +1,19 @@
 
 import React from "react"
-import { Share, TextStyle, ViewStyle, TouchableOpacity } from "react-native"
-import { Card, CardProps } from "@/components/Card"
+import { Share, TextStyle, TouchableOpacity } from "react-native"
 import { Quote } from "@/services/api/types"
 import { useQuoteStore } from "@/store/quoteStore"
 import { Ionicons } from "@expo/vector-icons"
 import { useAppTheme } from "@/theme/context"
-import { Row, Col } from "@/components"
+import { Row, Col, Surface } from "@/components"
 import { Text } from "@/components/Text"
 import { ThemedStyle } from "@/theme/types"
 
-interface QuoteCardProps extends CardProps {
+interface QuoteCardProps {
   quote: Quote
 }
 
-export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, ...rest }) => {
+export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
   const { addFavorite, removeFavorite, isFavorite } = useQuoteStore()
   const { themed, theme } = useAppTheme()
   const favorite = isFavorite(quote)
@@ -38,7 +37,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, ...rest }) => {
   }
 
   return (
-    <Card {...rest} style={[themed($card), rest.style]}>
+    <Surface padding="m" marginVertical="s">
       <Col gap="s">
         <Text
           style={themed($quoteText)}
@@ -67,15 +66,9 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, ...rest }) => {
           </TouchableOpacity>
         </Row>
       </Col>
-    </Card>
+    </Surface>
   )
 }
-
-const $card: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  padding: spacing.m,
-  marginVertical: spacing.s,
-  borderRadius: 16,
-})
 
 const $quoteText: ThemedStyle<TextStyle> = () => ({
   fontSize: 18,
@@ -88,4 +81,3 @@ const $authorText: ThemedStyle<TextStyle> = () => ({
   textAlign: "right",
   fontWeight: "600",
 })
-

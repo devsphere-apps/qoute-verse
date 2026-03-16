@@ -6,6 +6,12 @@ const ja: Translations = {
     cancel: "キャンセル",
     back: "戻る",
   },
+  quoteScreen: {
+    newQuotes: "New Quotes",
+  },
+  favoritesScreen: {
+    remove: "Remove",
+  },
   welcomeScreen: {
     postscript:
       "注目！ — このアプリはお好みの見た目では無いかもしれません(デザイナーがこのスクリーンを送ってこない限りは。もしそうなら公開しちゃいましょう！)",
